@@ -11,9 +11,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    var documentsUrl = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask,   appropriateFor: nil, create: false)
-    
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -22,16 +19,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: scene)
         
-        guard let defaultUrl = documentsUrl else {
-            fatalError()
-        }
+        let logInVC = LoginViewController(for: LoginViewController.Mode.registration)
         
-        let FileMangerVC = FileManagerViewController(title: "Documents", url: defaultUrl)
+        let logInNavigationVC = UINavigationController(rootViewController: logInVC)
         
-        let FileMangerNavigationVC = UINavigationController(rootViewController: FileMangerVC)
-        
-        window.rootViewController = FileMangerNavigationVC
-        
+        window.rootViewController = logInNavigationVC
         
         window.makeKeyAndVisible()
         
