@@ -14,6 +14,8 @@ protocol SortingSettingViewControllerDelegate: AnyObject {
 class SortingSettingViewController: UIViewController {
 
     weak var delegate: SortingSettingViewControllerDelegate?
+    
+    weak var flowCoordinator: SettingsCoordinator?
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
