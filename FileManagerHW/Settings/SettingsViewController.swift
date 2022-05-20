@@ -8,6 +8,8 @@
 import UIKit
 
 class SettingsViewController: UIViewController {
+    
+    weak var flowCoordinator: SettingsCoordinator?
 
     private enum Cell: Int, CaseIterable {
         case sorting = 0
@@ -45,7 +47,6 @@ class SettingsViewController: UIViewController {
     @objc private func filesizeSwitchToggle(_ sender: UISwitch) {
         Settings.shared.showSize.toggle()
     }
-    
 }
 
 extension SettingsViewController: UITableViewDataSource {
@@ -89,7 +90,6 @@ extension SettingsViewController: UITableViewDataSource {
         }
         return cell
     }
-
 }
 
 extension SettingsViewController: UITableViewDelegate {
@@ -103,10 +103,12 @@ extension SettingsViewController: UITableViewDelegate {
         case 0:
             let settingsVc = SortingSettingViewController()
             settingsVc.delegate = self
-            navigationController?.pushViewController(settingsVc, animated: true)
+            
+            flowCoordinator?.gotoSortingSettingViewController()
+        
         case 2:
-            let loginVc = LoginViewController(for: .update)
-            navigationController?.pushViewController(loginVc, animated: true)
+
+            flowCoordinator?.gotoLoginViewControllerForChange()
         default:
             return
         }

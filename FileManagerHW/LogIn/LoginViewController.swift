@@ -7,61 +7,63 @@
 import UIKit
 
 class LoginViewController: UIViewController, AlertPresenter {
-
+    
+    weak var flowCoordinator: SettingsCoordinator?
+    
     enum Mode {
         case registration
         case confirmation
         case signin
         case update
     }
-
+    
     // MARK: - Constants
     private let controlHeight: CGFloat = 42.0
     private let margin: CGFloat = 32.0
-
+    
     // MARK: - Password management
     private let password = Password()
-
+    
     // MARK: - Subviews
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
-
+        
         return scrollView
     }()
-
+    
     private lazy var contentView: UIView = {
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(container)
         return contentView
     }()
-
+    
     private lazy var container: UIStackView = {
         let container = UIStackView()
         container.translatesAutoresizingMaskIntoConstraints = false
         container.axis = .vertical
         container.spacing = 32
-
+        
         let labelContainer = innerContainer()
         [titleLabel, subtitleLabel].forEach {
             labelContainer.addArrangedSubview($0)
         }
-
+        
         let controlContainer = innerContainer()
         [textField, button].forEach {
             controlContainer.addArrangedSubview($0)
         }
-
+        
         [labelContainer, controlContainer].forEach {
             container.addArrangedSubview($0)
         }
-
+        
         return container
     }()
-
+    
     private let innerContainer: () -> UIStackView = {
         let container = UIStackView()
         container.translatesAutoresizingMaskIntoConstraints = false
@@ -69,31 +71,31 @@ class LoginViewController: UIViewController, AlertPresenter {
         container.spacing = 10
         return container
     }
-
+    
     private let titleLabel: UILabel = {
         let titleLabel = UILabel()
-
+        
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         titleLabel.textColor = .label
-
+        
         return titleLabel
     }()
-
+    
     private let subtitleLabel: UILabel = {
         let subtitleLabel = UILabel()
-
+        
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 0
         subtitleLabel.textColor = .secondaryLabel
-
+        
         return subtitleLabel
     }()
-
+    
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -104,7 +106,7 @@ class LoginViewController: UIViewController, AlertPresenter {
         textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         return textField
     }()
-
+    
     private lazy var button: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -114,17 +116,17 @@ class LoginViewController: UIViewController, AlertPresenter {
         button.setBackgroundImage(#imageLiteral(resourceName: "blue_pixel").alpha(0.8), for: .disabled)
         button.setBackgroundImage(#imageLiteral(resourceName: "blue_pixel").alpha(0.8), for: .selected)
         button.setBackgroundImage(#imageLiteral(resourceName: "blue_pixel").alpha(0.8), for: .highlighted)
-
+        
         button.layer.cornerRadius = 4.0
         button.layer.masksToBounds = true
-
+        
         button.heightAnchor.constraint(equalToConstant: controlHeight).isActive = true
-
+        
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-
+        
         return button
     }()
-
+    
     // MARK: - Properties
     // TODO: Move to view model
     private var mode: Mode = .registration {
@@ -134,9 +136,9 @@ class LoginViewController: UIViewController, AlertPresenter {
             button.setTitle(buttonTitle, for: .normal)
         }
     }
-
+    
     private var originalMode: Mode
-
+    
     private var screenTitle: String {
         switch mode {
         case .registration,
@@ -148,7 +150,7 @@ class LoginViewController: UIViewController, AlertPresenter {
             return "Change password"
         }
     }
-
+    
     private var subtitle: String {
         switch mode {
         case .registration,
@@ -160,7 +162,7 @@ class LoginViewController: UIViewController, AlertPresenter {
             return "Enter your password"
         }
     }
-
+    
     private var buttonTitle: String {
         switch mode {
         case .registration:
@@ -172,20 +174,20 @@ class LoginViewController: UIViewController, AlertPresenter {
         case .signin:
             return "Login"
         }
-
+        
     }
-
+    
     private var passwordInput: String = ""
     private var initialPasswordInput: String = ""
-
+    
     // MARK: - Initializers
-
+    
     required init?(coder: NSCoder) {
         originalMode = .registration
         super.init(coder: coder)
         setLoginMode()
     }
-
+    
     init(for mode: Mode) {
         originalMode = mode
         super.init(nibName: nil, bundle: nil)
@@ -197,51 +199,51 @@ class LoginViewController: UIViewController, AlertPresenter {
             }
         }
     }
-
+    
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-
+        
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     // MARK: - Keyboard life cycle
     @objc private func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-
+        
         let insetAdjustment = keyboardSize.height - view.safeAreaInsets.bottom + margin
         scrollView.contentInset.bottom = insetAdjustment
         scrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: insetAdjustment, right: 0)
     }
-
+    
     @objc private func keyboardDidShow(notification: NSNotification) {
         guard scrollView.contentSize.height > scrollView.bounds.height - scrollView.contentInset.bottom else { return }
         let bottomOffset = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height + scrollView.contentInset.bottom)
         scrollView.setContentOffset(bottomOffset, animated: true)
     }
-
+    
     @objc private func keyboardWillHide(notification: NSNotification) {
         scrollView.contentInset.bottom = .zero
         scrollView.verticalScrollIndicatorInsets = .zero
     }
-
+    
     // MARK: - UI
-
+    
     func setupUI() {
         view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
@@ -250,20 +252,20 @@ class LoginViewController: UIViewController, AlertPresenter {
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
+            
             container.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             container.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
             container.widthAnchor.constraint(equalToConstant: 300)
         ])
     }
-
+    
     private func setLoginMode() {
         if password.isSet {
             mode = .signin
@@ -271,7 +273,7 @@ class LoginViewController: UIViewController, AlertPresenter {
             mode = .registration
         }
     }
-
+    
     func animateModeSwitch(to mode: Mode) {
         UIView.animate(withDuration: 0.3) {
             self.subtitleLabel.alpha = 0
@@ -284,28 +286,28 @@ class LoginViewController: UIViewController, AlertPresenter {
             }
         }
     }
-
+    
     // MARK: - Actions
-
+    
     @objc private func textFieldEditingChanged(_ sender: UITextField) {
         guard let password = sender.text else { return }
         if password.count > 4 {
             presentErrorAlert("Password should be no longer than 4 characters!")
             textField.text = String(password.prefix(4))
             for _ in 0..<password.count {
-            sender.deleteBackward()
+                sender.deleteBackward()
             }
         }
         passwordInput = password
     }
-
+    
     @objc private func buttonTapped(_ sender: UIButton) {
-
+        
         guard passwordInput.count > 0 else {
             presentErrorAlert("Password cannot be empty!")
             return
         }
-
+        
         switch mode {
         case .registration,
              .update:
@@ -340,43 +342,34 @@ class LoginViewController: UIViewController, AlertPresenter {
             performLogin()
         }
     }
-
+    
+    private func transition(from: UIViewController, to: UIViewController) {
+        from.willMove(toParent: nil)
+        self.addChild(to)
+        
+        self.transition(from: from, to: to, duration: self.transitionCoordinator?.transitionDuration ?? 0.4, options: [], animations: {
+            
+        }) { (finished) in
+            from.removeFromParent()
+            to.didMove(toParent: self)
+        }
+    }
+    
     private func performLogin() {
-        
-        let documentsUrl = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask,   appropriateFor: nil, create: false)
-        
         guard originalMode != .update else {
-            navigationController?.popViewController(animated: true)
-            return
-        }
-
-        guard let defaultUrl = documentsUrl else {
-            fatalError()
-        }
-        
-        guard let navigationCtrl = self.navigationController else {
+            flowCoordinator?.backtoRoot()
             return
         }
         
-        // MARK:- VC
-        let fileManagerVC = FileManagerViewController(title: "Documents", url: defaultUrl)
-        let settingsVC = SettingsViewController()
-        
-        // MARK: Navigation VC
-        let fileManagerNavigationVC = UINavigationController(rootViewController: fileManagerVC)
-        let settingsNavigationVC = UINavigationController(rootViewController: settingsVC)
-        
-        // MARK: Иконки и текст TabBarItems для NavigationVC
-        fileManagerVC.tabBarItem = UITabBarItem(title: "Documents", image: UIImage(systemName: "note.text"), tag: 0)
-        settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "wrench.and.screwdriver"), tag: 0)
-        
-        // MARK: TabBar
-        let tabBar = UITabBarController()
-        
-        // помещаем в TabBar VC
-        tabBar.viewControllers = [fileManagerNavigationVC, settingsNavigationVC]
-        
-        navigationCtrl.pushViewController(tabBar, animated: true)
+        if let delegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            delegate.window?.rootViewController = delegate.mainCoordinator?.tabBarController
+            delegate.mainCoordinator?.tabBarController.view.alpha = 0.2
+            UIView.animate(withDuration: 1, animations: {delegate.mainCoordinator?.tabBarController.view.alpha = 1.0})
+            delegate.window?.makeKeyAndVisible()
+        }
+        //Не понятно, нужно ли затем выполнять одно из следующих действий?
+        //        self.view.removeFromSuperview()
+        //        self.dismiss(animated: false, completion: nil)
     }
 }
 

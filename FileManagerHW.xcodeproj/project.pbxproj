@@ -21,6 +21,11 @@
 		84EC02BF28193E79005DE0D9 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC02BE28193E79005DE0D9 /* Settings.swift */; };
 		84EC02C328193EC2005DE0D9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC02C228193EC2005DE0D9 /* SettingsViewController.swift */; };
 		84EC02C628193EFC005DE0D9 /* SortingSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC02C528193EFC005DE0D9 /* SortingSettingViewController.swift */; };
+		84F0529B2836A8AD00374B10 /* MainCoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F0529A2836A8AD00374B10 /* MainCoordinatorProtocol.swift */; };
+		84F0529E2836A8D100374B10 /* FlowCoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F0529D2836A8D100374B10 /* FlowCoordinatorProtocol.swift */; };
+		84F052A12836A90200374B10 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F052A02836A90200374B10 /* AppCoordinator.swift */; };
+		84F052B22836ABBE00374B10 /* SettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F052B12836ABBE00374B10 /* SettingsCoordinator.swift */; };
+		84F052B52836ABE500374B10 /* DocumentsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F052B42836ABE500374B10 /* DocumentsCoordinator.swift */; };
 		E1BA2C7E6437F18A0033FEDF /* Pods_FileManagerHW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395233565B4EE0E2FC59CC81 /* Pods_FileManagerHW.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +48,11 @@
 		84EC02BE28193E79005DE0D9 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		84EC02C228193EC2005DE0D9 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		84EC02C528193EFC005DE0D9 /* SortingSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingSettingViewController.swift; sourceTree = "<group>"; };
+		84F0529A2836A8AD00374B10 /* MainCoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinatorProtocol.swift; sourceTree = "<group>"; };
+		84F0529D2836A8D100374B10 /* FlowCoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowCoordinatorProtocol.swift; sourceTree = "<group>"; };
+		84F052A02836A90200374B10 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		84F052B12836ABBE00374B10 /* SettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
+		84F052B42836ABE500374B10 /* DocumentsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsCoordinator.swift; sourceTree = "<group>"; };
 		ED9E7EC27CBA3C50B4C5093B /* Pods-FileManagerHW.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FileManagerHW.debug.xcconfig"; path = "Target Support Files/Pods-FileManagerHW/Pods-FileManagerHW.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,6 +89,7 @@
 		8485CBA7280E9731002D015D /* FileManagerHW */ = {
 			isa = PBXGroup;
 			children = (
+				84F052992836A87B00374B10 /* Coordinator */,
 				8485CBA8280E9731002D015D /* AppDelegate.swift */,
 				8485CBAA280E9731002D015D /* SceneDelegate.swift */,
 				8485CBAC280E9731002D015D /* FileManagerViewController.swift */,
@@ -112,6 +123,18 @@
 				84EC02C528193EFC005DE0D9 /* SortingSettingViewController.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		84F052992836A87B00374B10 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				84F0529A2836A8AD00374B10 /* MainCoordinatorProtocol.swift */,
+				84F0529D2836A8D100374B10 /* FlowCoordinatorProtocol.swift */,
+				84F052A02836A90200374B10 /* AppCoordinator.swift */,
+				84F052B12836ABBE00374B10 /* SettingsCoordinator.swift */,
+				84F052B42836ABE500374B10 /* DocumentsCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		9CE1734B54DADF3A0095DF5B /* Frameworks */ = {
@@ -245,15 +268,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				84EC02BB28193E09005DE0D9 /* Password.swift in Sources */,
+				84F052B52836ABE500374B10 /* DocumentsCoordinator.swift in Sources */,
 				8485CBAD280E9731002D015D /* FileManagerViewController.swift in Sources */,
 				84EC02C328193EC2005DE0D9 /* SettingsViewController.swift in Sources */,
+				84F0529B2836A8AD00374B10 /* MainCoordinatorProtocol.swift in Sources */,
+				84F052B22836ABBE00374B10 /* SettingsCoordinator.swift in Sources */,
 				8485CBC5280E9BC2002D015D /* FileSystemObject.swift in Sources */,
 				84EC02C628193EFC005DE0D9 /* SortingSettingViewController.swift in Sources */,
 				8485CBA9280E9731002D015D /* AppDelegate.swift in Sources */,
 				84EC02BF28193E79005DE0D9 /* Settings.swift in Sources */,
+				84F0529E2836A8D100374B10 /* FlowCoordinatorProtocol.swift in Sources */,
 				8485CBAB280E9731002D015D /* SceneDelegate.swift in Sources */,
 				84EC02B728193DC9005DE0D9 /* LoginViewController.swift in Sources */,
 				8485CBCC280E9C35002D015D /* AlertFactory.swift in Sources */,
+				84F052A12836A90200374B10 /* AppCoordinator.swift in Sources */,
 				8485CBC1280E9B84002D015D /* Directory.swift in Sources */,
 				8485CBC8280E9C00002D015D /* AlertPresenter.swift in Sources */,
 			);

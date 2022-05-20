@@ -8,7 +8,7 @@
 import UIKit
 import PhotosUI
 
-var documentsUrl = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask,   appropriateFor: nil, create: false)
+public var documentsUrl = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask,   appropriateFor: nil, create: false)
 
 class FileManagerViewController: UIViewController, AlertPresenter {
     
@@ -16,6 +16,8 @@ class FileManagerViewController: UIViewController, AlertPresenter {
     var directory: Directory
     
     private var directoryName: String?
+    
+    weak var flowCoordinator: DocumentsCoordinator?
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
